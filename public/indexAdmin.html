@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Locus Systems - Comparte tu ubicación</title>
+	<meta name="description" content="">
+	<meta name="keywords" content="">	
+	<link rel="stylesheet" href="https://unpkg.com/tailwindcss/dist/tailwind.min.css">
+
+	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet">
+
+	<style>				 
+		body{
+            margin:0;
+        }
+        #map{
+            height: 100vh;
+            width: 100vw;
+        }
+
+	</style>
+
+</head>
+
+
+<body class="leading-normal tracking-normal text-gray-900" style="font-family: 'Source Sans Pro', sans-serif;">
+
+    <div id='map'></div>
+
+</body>
+
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+  integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+  crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+  integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+  crossorigin=""></script>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script defer>
+    var socket = io();
+    var map = L.map('map').setView([13.7942, -88.8965], 13);
+
+   var osm =  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    if(!navigator.geolocation){
+        console.log("Por favor activa la ubicacion")
+    }else{        
+        setInterval(()=>{
+            socket.on('send-coordinates', (position)=>{
+                //console.log(position)
+                positionMarker(position)
+            })
+        }, 3000)
+
+    }
+
+    var marker, circle;
+    
+    function positionMarker(position){
+        var lat = position[0];
+        var long = position[1];
+        var accur = position[3];
+        
+        if(marker){
+            map.removeLayer(marker)
+        }
+        if(circle){
+            map.removeLayer(circle)
+        }
+
+         marker = L.marker([lat, long])
+         circle = L.circle([lat,long], {radius: accur || 420})
+
+        var grp = L.featureGroup([marker,circle]).addTo(map)
+
+        map.fitBounds(grp.getBounds())
+    }
+    
+</script>
+</html>
