@@ -20,6 +20,9 @@
             height: 100vh;
             width: 100vw;
         }
+        .leaflet-control{
+            display: none;
+        }
 
 	</style>
 
@@ -42,47 +45,5 @@
 
 <script src="/socket.io/socket.io.js"></script>
 
-<script defer>
-    var socket = io();
-    var map = L.map('map').setView([13.7942, -88.8965], 13);
-
-   var osm =  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-
-    if(!navigator.geolocation){
-        console.log("Por favor activa la ubicacion")
-    }else{        
-        setInterval(()=>{
-            socket.on('send-coordinates', (position)=>{
-                //console.log(position)
-                positionMarker(position)
-            })
-        }, 3000)
-
-    }
-
-    var marker, circle;
-    
-    function positionMarker(position){
-        var lat = position[0];
-        var long = position[1];
-        var accur = position[3];
-        
-        if(marker){
-            map.removeLayer(marker)
-        }
-        if(circle){
-            map.removeLayer(circle)
-        }
-
-         marker = L.marker([lat, long])
-         circle = L.circle([lat,long], {radius: accur || 420})
-
-        var grp = L.featureGroup([marker,circle]).addTo(map)
-
-        map.fitBounds(grp.getBounds())
-    }
-    
-</script>
+<script defer src="admin.js"></script>
 </html>
