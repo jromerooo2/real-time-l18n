@@ -57,5 +57,4 @@ function positionMarker(socketprops){
 
      L.featureGroup([marker, circle]).addTo(map)
 
-    //map.fitBounds(grp.getBounds())
 }
