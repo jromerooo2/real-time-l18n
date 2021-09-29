@@ -39,7 +39,7 @@ function error(err) {
             }
           var interval = setInterval(()=>{
               navigator.geolocation.getCurrentPosition(success, error, options)
-          }, 3000)
+          }, 2000)
 
           stop.addEventListener("click", ()=>{
                 window.clearInterval(interval)

@@ -22,39 +22,44 @@ var sockets = {};
 if(!navigator.geolocation){
     alert("Por favor activa la ubicacion")
 }else{        
-    setInterval(()=>{
+
         socket.on('send-coordinates', (id , position)=>{
+            console.log(sockets)
             if (!(id in sockets)) {
                 sockets[id] = position;
-            }
-
-            for (const socket in sockets) {
-                positionMarker(sockets[socket])    
+                positionMarker(id);
+            }else{
+                positionMarker(id)
             }
               
         })
-    }, 3000)
+
 
 }
 
 var marker, circle;
 
-function positionMarker(socketprops){
-    if(marker){
-        map.removeLayer(marker)
-    }
-    if(circle){
-        map.removeLayer(circle)
-    }
+function positionMarker(id){
 
-    var lat = socketprops[0];
-    var long = socketprops[1];
-    var accur = socketprops[3];
+    for(var socket in sockets){
+        
+        if(marker && socket === id){
+            map.removeLayer(marker)
+        }
+        if(circle  && socket === id){
+            map.removeLayer(circle)
+        }
     
+        var lat = sockets[socket][0];
+        var long = sockets[socket][1];
+        var accur = sockets[socket][3];
+        
+    
+         marker = L.marker([lat, long], {icon:busicon})
+         circle = L.circle([lat,long], {radius: accur || 420})
+    
+         L.featureGroup([marker, circle]).addTo(map)
+    }
 
-     marker = L.marker([lat, long], {icon:busicon})
-     circle = L.circle([lat,long], {radius: accur || 420})
-
-     L.featureGroup([marker, circle]).addTo(map)
 
 }
