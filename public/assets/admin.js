@@ -17,13 +17,21 @@ var osm =  L.tileLayer('https://api.mapbox.com/styles/v1/jromerooo2/cku5okz0z2si
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
+
+var sockets = {};
 if(!navigator.geolocation){
-    console.log("Por favor activa la ubicacion")
+    alert("Por favor activa la ubicacion")
 }else{        
     setInterval(()=>{
-        socket.on('send-coordinates', (position)=>{
-            //console.log(position)
-            positionMarker(position)
+        socket.on('send-coordinates', (id , position)=>{
+            if (!(id in sockets)) {
+                sockets[id] = position;
+            }
+
+            for (const socket in sockets) {
+                positionMarker(sockets[socket])    
+            }
+              
         })
     }, 3000)
 
@@ -31,11 +39,7 @@ if(!navigator.geolocation){
 
 var marker, circle;
 
-function positionMarker(position){
-    var lat = position[0];
-    var long = position[1];
-    var accur = position[3];
-    
+function positionMarker(socketprops){
     if(marker){
         map.removeLayer(marker)
     }
@@ -43,10 +47,15 @@ function positionMarker(position){
         map.removeLayer(circle)
     }
 
+    var lat = socketprops[0];
+    var long = socketprops[1];
+    var accur = socketprops[3];
+    
+
      marker = L.marker([lat, long], {icon:busicon})
      circle = L.circle([lat,long], {radius: accur || 420})
 
-    var grp = L.featureGroup([marker,circle]).addTo(map)
+     L.featureGroup([marker, circle]).addTo(map)
 
-    map.fitBounds(grp.getBounds())
+    //map.fitBounds(grp.getBounds())
 }

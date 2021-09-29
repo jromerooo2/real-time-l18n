@@ -20,8 +20,7 @@ app.get('/admin', (req, res) => {
 
 io.on('connection', (socket) => {
   socket.on('coordinates', (msg) => {
-    console.log(msg)
-    socket.broadcast.emit('send-coordinates', msg);
+    socket.broadcast.emit('send-coordinates', socket.id,msg);
   });
 });
 
