@@ -1,6 +1,6 @@
 const start = document.getElementById("start");
 const txt2 = document.getElementById("txt2");
-const div = document.getElementById("animate")
+const animate = document.getElementById("img2")
 const txt = document.getElementById("txt");
 const stop = document.getElementById("stop");
 var socket = io();
@@ -32,7 +32,8 @@ function error(err) {
             active = 1;
 
             if (active === 1) {
-                div.classList.add("animate-pulse");
+               animate.classList.add("animate-bounce");
+               txt.classList.add("animate-pulse")
                 txt.innerText = "Haz click en el botón para detener el viaje."
                 txt.innerText = "Estamos compartiendo tu ubicación con el sistema";
                 stop.style.display = "block";
@@ -49,7 +50,8 @@ function error(err) {
     socket.emit('delete-bus')
       location.reload();
       window.clearInterval(interval)
-      div.classList.remove("animate-pulse");
+      animate.classList.remove("animate-bounce");
+      txt.classList.add("animate-pulse")
       txt.innerText = "Comparte tu ubicación con el sistema para mayor seguridad en tu viaje.";
       stop.style.display = "none";
       start.style.display = "block";
