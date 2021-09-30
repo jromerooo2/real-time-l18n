@@ -17,11 +17,27 @@ app.get('/admin', (req, res) => {
 });
 
 
+var allClients = [];
 
 io.on('connection', (socket) => {
+  allClients.push(socket.id);
+
   socket.on('coordinates', (msg) => {
     socket.broadcast.emit('send-coordinates', socket.id,msg);
   });
+
+  socket.on('delete-bus', () => {
+    socket.broadcast.emit('delete-bus', socket.id);
+ });
+ 
+  socket.on('disconnect', ()=>{
+    console.log('Got disconnect!');
+
+    var i = allClients.indexOf(socket.id);
+
+    allClients.splice(i, 1);
+  })
+ 
 });
 
 

@@ -5,6 +5,7 @@ const txt = document.getElementById("txt");
 const stop = document.getElementById("stop");
 var socket = io();
 var active = 0;
+var interval;
 
 var options = {
   enableHighAccuracy: true,
@@ -26,7 +27,7 @@ function error(err) {
 //start interval
   start.addEventListener("click", ()=>{
       if(!navigator.geolocation){
-          console.log("Por favor activa la ubicacion")
+          alert("Por favor activa la ubicacion")
       }else{
             active = 1;
 
@@ -37,17 +38,18 @@ function error(err) {
                 stop.style.display = "block";
                 start.style.display = "none";
             }
-          var interval = setInterval(()=>{
+           interval = setInterval(()=>{
               navigator.geolocation.getCurrentPosition(success, error, options)
           }, 2000)
-
-          stop.addEventListener("click", ()=>{
-                window.clearInterval(interval)
-                div.classList.remove("animate-pulse");
-                txt.innerText = "Comparte tu ubicación con el sistema para mayor seguridad en tu viaje.";
-                stop.style.display = "none";
-                start.style.display = "block";
-        })
   
       }
   })
+
+  stop.addEventListener("click", ()=>{
+    socket.emit('delete-bus')
+      window.clearInterval(interval)
+      div.classList.remove("animate-pulse");
+      txt.innerText = "Comparte tu ubicación con el sistema para mayor seguridad en tu viaje.";
+      stop.style.display = "none";
+      start.style.display = "block";
+})

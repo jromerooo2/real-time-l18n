@@ -1,7 +1,12 @@
 
 
 var socket = io();
-var map = L.map('map').setView([13.7942, -88.8965], 13);
+
+
+var map = L.map('map', {
+    zoom:5
+}).setView([13.7942, -88.8965]);
+
 
 //custom marker:)
 var busicon = L.icon({
@@ -18,48 +23,62 @@ var osm =  L.tileLayer('https://api.mapbox.com/styles/v1/jromerooo2/cku5okz0z2si
 }).addTo(map);
 
 
+var socketMarkerCircle ={}; 
+var marker, circle;
 var sockets = {};
-if(!navigator.geolocation){
-    alert("Por favor activa la ubicacion")
-}else{        
+var markersarr = [];
+var circlesarr = []
 
         socket.on('send-coordinates', (id , position)=>{
-            console.log(sockets)
+
             if (!(id in sockets)) {
-                sockets[id] = position;
-                positionMarker(id);
+                        sockets[id] = position;
+
+                        markersarr.forEach(marker => map.removeLayer(marker));
+                        circlesarr.forEach(circle => map.removeLayer(circle));
+
+
+                        for(var socket in sockets){
+
+                            var lat = sockets[socket][0];
+                            var long = sockets[socket][1];
+                            var accur = sockets[socket][3];
+                                
+                            marker = L.marker([lat, long], {icon:busicon})
+                            circle = L.circle([lat,long], {radius: accur || 420})
+
+                            circlesarr.push(circle)
+                            markersarr.push(marker)
+
+                            L.featureGroup([marker, circle]).addTo(map);
+                           
+                        }
             }else{
-                positionMarker(id)
+
+
+                markersarr.forEach(marker => map.removeLayer(marker));
+                circlesarr.forEach(circle => map.removeLayer(circle));
+
+                for(var socket in sockets){
+                        var lat = sockets[socket][0];
+                        var long = sockets[socket][1];
+                        var accur = sockets[socket][3];
+                            
+                        marker = L.marker([lat, long], {icon:busicon})
+                        circle = L.circle([lat,long], {radius: accur || 420})  
+
+                        circlesarr.push(circle)
+                        markersarr.push(marker)
+                         L.featureGroup([marker, circle]).addTo(map);   
+                        
+                    }
             }
               
         })
 
+        socket.on('delete-bus', (id)=>{
+            console.log('bus to eliminate' + id)
+            delete sockets[id]
+            console.log(sockets)
+        })
 
-}
-
-var marker, circle;
-
-function positionMarker(id){
-
-    for(var socket in sockets){
-        
-        if(marker && socket === id){
-            map.removeLayer(marker)
-        }
-        if(circle  && socket === id){
-            map.removeLayer(circle)
-        }
-    
-        var lat = sockets[socket][0];
-        var long = sockets[socket][1];
-        var accur = sockets[socket][3];
-        
-    
-         marker = L.marker([lat, long], {icon:busicon})
-         circle = L.circle([lat,long], {radius: accur || 420})
-    
-         L.featureGroup([marker, circle]).addTo(map)
-    }
-
-
-}
