@@ -20,68 +20,28 @@ var osm =  L.tileLayer('https://api.mapbox.com/styles/v1/jromerooo2/cku5okz0z2si
 }).addTo(map);
 
 
-var marker, circle;
 var sockets = {};
 
 //array solution
-var markersarr = [];
-var circlesarr = []
+var markers = {};
+
 
         socket.on('send-coordinates', (id , position)=>{
 
-            if (!(id in sockets)) {
-                        sockets[id] = position;
+            var latLng = [position[0],position[1]]
 
-                        //clear all markers
-                        markersarr.forEach(marker => map.removeLayer(marker));
-                        circlesarr.forEach(circle => map.removeLayer(circle));
+            if (!markers[id]) {
+                markers[id] = L.marker(latLng, {icon:busicon}).addTo(map);
 
-
-                        for(var socket in sockets){
-
-                            var lat = sockets[socket][0];
-                            var long = sockets[socket][1];
-                            var accur = sockets[socket][3];
-                                
-                            marker = L.marker([lat, long], {icon:busicon})
-                            circle = L.circle([lat,long], {radius: accur || 420})
-                            
-                            //add new markers to the array
-                            circlesarr.push(circle)
-                            markersarr.push(marker)
-
-                            L.featureGroup([marker, circle]).addTo(map);
-                           
-                        }
             }else{
+                markers[id].setLatLng(latLng);
 
-                //clear all markers
-                markersarr.forEach(marker => map.removeLayer(marker));
-                circlesarr.forEach(circle => map.removeLayer(circle));
-
-                for(var socket in sockets){
-                        var lat = sockets[socket][0];
-                        var long = sockets[socket][1];
-                        var accur = sockets[socket][3];
-                            
-                        marker = L.marker([lat, long], {icon:busicon})
-                        circle = L.circle([lat,long], {radius: accur || 420})  
-
-                        //add new markers to the arrays
-                        circlesarr.push(circle)
-                        markersarr.push(marker)
-
-
-                         L.featureGroup([marker, circle]).addTo(map);   
-                        
-                    }
             }
               
         })
 
         socket.on('delete-bus', (id)=>{
             console.log('bus to eliminate' + id)
-            delete sockets[id]
-            console.log(sockets)
+            map.removeLayer(markers[id])
         })
 

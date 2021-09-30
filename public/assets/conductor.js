@@ -47,6 +47,7 @@ function error(err) {
 
   stop.addEventListener("click", ()=>{
     socket.emit('delete-bus')
+      location.reload();
       window.clearInterval(interval)
       div.classList.remove("animate-pulse");
       txt.innerText = "Comparte tu ubicación con el sistema para mayor seguridad en tu viaje.";
