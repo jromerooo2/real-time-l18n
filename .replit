@@ -1,2 +1,2 @@
 language = "nodejs"
-run = "node -r esm index.js"
+run = "node index.js"
