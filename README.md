@@ -1,8 +1,8 @@
 # real-time-l18n
 a node and socket.io app to track a location of anyone that enters the room of sockets
- - npm i || install to install all dependencies 
+ - npm i || install to install all dependencies
+ - create database with users information and different access to each role. 
  - npm run start to start developement server
- 
  
  You can also automatically deploy this location app to heroku (it already has config files)
  
