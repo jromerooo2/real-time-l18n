@@ -1,13 +1,16 @@
 {
-  "name": "socket-chat-example",
+  "name": "socket-realtime-l18n",
   "version": "0.0.1",
-  "description": "my first socket.io app",
+  "description": "my third socket.io app",
   "dependencies": {
+    "esm": "^3.2.25",
     "express": "^4.17.1",
+    "md5": "^2.3.0",
+    "mysql": "^2.18.1",
     "nodemon": "^2.0.13",
     "socket.io": "^4.1.2"
   },
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon -r esm index.js"
   }
 }

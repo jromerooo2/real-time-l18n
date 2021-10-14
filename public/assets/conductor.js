@@ -3,9 +3,11 @@ const txt2 = document.getElementById("txt2");
 const animate = document.getElementById("img2")
 const txt = document.getElementById("txt");
 const stop = document.getElementById("stop");
+
 var socket = io();
 var active = 0;
 var interval;
+
 
 var options = {
   enableHighAccuracy: true,
