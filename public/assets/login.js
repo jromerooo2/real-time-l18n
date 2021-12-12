@@ -13,7 +13,7 @@ btn.addEventListener("click", (event)=>{
             username: document.getElementById("email").value,
             password: document.getElementById("password").value
         }
-        fetch("https://locus-web-app.herokuapp.com/",  {
+        fetch("/",  {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

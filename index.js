@@ -3,11 +3,12 @@
 import express from 'express' 
 import mysql from 'mysql'
 import md5 from 'md5';
+
 //OLD ASS JS
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 //middlewarexd
 app.use(express.json());
@@ -26,20 +27,18 @@ var con = mysql.createConnection({
 
 con.connect(function(err) {
   if (err) throw err;
-  console.log("Connected 2 database");
 });
 
 
 
 app.post('/', (req, res)=>{
   var username = req.body.username;
-  var password = md5(req.body.password);
+  var password = req.body.password;
   
   //query n shit
   con.query("SELECT * FROM tb_usuarios WHERE nombre_usuario=? AND contrasena=?",[username, password],(err,results, fields)=>{
 
     if (results.length > 0 && results[0].cargo_usuario === 2) {
-      console.log("SUCESS")
       res.send("0")
     }else if (results.length > 0 && results[0].cargo_usuario === 1) {
       res.send("1");    
