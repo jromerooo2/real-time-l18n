@@ -1,14 +1,14 @@
-
-//ECMAS6  
+  
 import express from 'express' 
 import mysql from 'mysql'
 import md5 from 'md5';
 
-//OLD ASS JS
+//initialize express and socket.io 
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const port = process.env.PORT || 3001;
+
 
 //middlewarexd
 app.use(express.json());
@@ -17,12 +17,14 @@ app.use(express.urlencoded({
 }));
 
 
+require('dotenv').config();
+console.log(process.env.MYSQL_HOST);
 
 var con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database:"dbsistemaviajes"
+  host: process.env.MYSQL_HOST,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE
 });
 
 con.connect(function(err) {
