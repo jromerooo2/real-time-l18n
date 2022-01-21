@@ -17,28 +17,25 @@ app.use(express.urlencoded({
 }));
 
 
+//initialize dotenv
 require('dotenv').config();
-console.log(process.env.MYSQL_HOST);
 
-var con = mysql.createConnection({
+
+//initialize mysql
+const pool = mysql.createPool({
   host: process.env.MYSQL_HOST,
   user: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DATABASE
 });
 
-con.connect(function(err) {
-  if (err) throw err;
-});
-
-
 
 app.post('/', (req, res)=>{
   var username = req.body.username;
   var password = req.body.password;
   
-  //query n shit
-  con.query("SELECT * FROM tb_usuarios WHERE nombre_usuario=? AND contrasena=?",[username, password],(err,results, fields)=>{
+  //query to login
+  pool.query("SELECT * FROM tb_usuarios WHERE nombre_usuario=? AND contrasena=?",[username, password],(err,results, fields)=>{
 
     if (results.length > 0 && results[0].cargo_usuario === 2) {
       res.send("0")
@@ -49,9 +46,14 @@ app.post('/', (req, res)=>{
     }
   })
 })
+
+
 app.use(express.static(__dirname + '/public/assets'));
 
 
+
+
+//Main Routes
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
 });
@@ -65,6 +67,8 @@ app.get('/conductor', (req, res) => {
 })
 
 
+
+//socket.io config
 var allClients = [];
 
 io.on('connection', (socket) => {
@@ -87,6 +91,7 @@ io.on('connection', (socket) => {
   })
  
 });
+
 
 
 http.listen(port, () => {
