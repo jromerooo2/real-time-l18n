@@ -1,6 +1,6 @@
   
 import express from 'express' 
-import mysql from 'mysql'
+import { Login } from './utils/mysql'
 import md5 from 'md5';
 
 //initialize express and socket.io 
@@ -17,34 +17,18 @@ app.use(express.urlencoded({
 }));
 
 
-//initialize dotenv
-require('dotenv').config();
-
-
-//initialize mysql
-const pool = mysql.createPool({
-  host: process.env.MYSQL_HOST,
-  user: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DATABASE
-});
-
-
 app.post('/', (req, res)=>{
-  var username = req.body.username;
-  var password = req.body.password;
-  
-  //query to login
-  pool.query("SELECT * FROM tb_usuarios WHERE nombre_usuario=? AND contrasena=?",[username, password],(err,results, fields)=>{
+  let username = req.body.username;
+  let password = req.body.password;
+  let num;
 
-    if (results.length > 0 && results[0].cargo_usuario === 2) {
-      res.send("0")
-    }else if (results.length > 0 && results[0].cargo_usuario === 1) {
-      res.send("1");    
-    }else{
-      res.send("2")
-    }
-  })
+  Login(username, password).then(function(rows) {
+    //avoiding sendStatus err
+    num = rows;
+    res.send(num.toString());
+  }).catch((err) => setImmediate(() => { throw err; }));
+  
+
 })
 
 

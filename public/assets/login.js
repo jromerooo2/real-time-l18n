@@ -22,11 +22,11 @@ btn.addEventListener("click", (event)=>{
           })
           .then(response => response.json())
           .then(data => {
-              if (data === 0) {
+              if (data === 2) {
                 window.location.href = "admin";
             }else if (data === 1) {
                 window.location.href = "conductor";
-            }else if (data === 2) {
+            }else if (data === 0) {
                 document.getElementById("error-alert").classList.remove(
                     "hidden"
                 )
