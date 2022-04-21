@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "my third socket.io app",
   "dependencies": {
-    "dotenv": "^14.2.0",
+    "dotenv": "^14.3.2",
     "esm": "^3.2.25",
     "express": "^4.17.3",
     "jsonwebtoken": "^8.5.1",
