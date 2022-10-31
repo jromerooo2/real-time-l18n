@@ -1,5 +1,7 @@
 # real-time-l18n
-a node and socket.io app to track a location of anyone that enters the room of sockets
+a node and socket.io app designed to track a location of anyone that enters the room of sockets,
+this was a project designed for a national hackathon in El Salvador, this project won 1st place.
+
  - npm i || install to install all dependencies
  - create database with users information and different access to each role. 
  - npm run start to start developement server
