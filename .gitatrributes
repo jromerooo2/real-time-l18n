@@ -1,2 +1,4 @@
+*.sol linguist-language=Solidity 
 *.html linguist-detectable=false
-*.js linguist-language=JavaScript
+*.css linguist-detectable=false
+*.js linguist-detectable=false
