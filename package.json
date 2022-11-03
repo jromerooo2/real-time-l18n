@@ -9,7 +9,7 @@
     "jsonwebtoken": "^8.5.1",
     "md5": "^2.3.0",
     "mysql": "^2.18.1",
-    "nodemon": "^2.0.15",
+    "nodemon": "^2.0.17",
     "socket.io": "^4.2.0"
   },
   "scripts": {
